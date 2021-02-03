@@ -20,7 +20,7 @@ vector<int> distance(MAX_NODE, -1)
 - 처음에 -1로 초기화
 - 출발 도시의 경우 경로를 0으로 설정
 
-#### 3. queue<int> q
+#### 3. queue
 - q.push()
 - q.front()
 - q.pop()
@@ -33,7 +33,7 @@ while (!q.empty()) {
   q.pop();
   
   std::vector<>
-  for (int i = 0; i < graph[now].size(); i++) {
+  for (int i = 0; i < graph[now].size(); i++) { //O(N+M), N:node 수, M:간선 수
     int nextNode = graph[now][i];
     
     if (d[nextNode] == -1) {  //-1은 아직 방문하지 않은 도시를 의미
