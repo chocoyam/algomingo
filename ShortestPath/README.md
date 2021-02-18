@@ -8,10 +8,16 @@
 ```
 vector<pair<int, int>> graph[MAX_NODE];
 ```
+- 벡터 배열
+- 배열 index는 시작 노드를 나타냄
+- 벡터 index는 간선 정보를 나타내는데, 도착 노드와 비용을 pair로 가짐
+
 **2. distance**
 ```
 int distance[MAX_NODE];
 ```
+- 배열 index는 도착 노드를, 배열 원소는 비용을 나타냄
+- 
 **3. priority queue**
 ```
 priority_queue<pair<int, int>> prior_queue;
