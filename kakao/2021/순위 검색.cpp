@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -19,8 +20,8 @@ enum Conditions {
     chicken = 1 << 7,
     pizza = 1 << 8
 };
+
 struct Applicant {
-    //Conditions cond[4];
     int condInt;
     int score;
 };
@@ -59,7 +60,6 @@ Applicant getApplicant(string str) {
         int space = str.find(' ', pos);
         string getStr = str.substr(pos, space - pos);
         if (i != 4) {
-            //applicant.cond[i] = getCondition(getStr);
             condInt = condInt | getCondition(getStr);
         }
         else {
@@ -72,12 +72,18 @@ Applicant getApplicant(string str) {
     return applicant;
 }
 
+bool compareScore(Applicant lhs, Applicant rhs) {
+    return lhs.score < rhs.score;
+}
+
 vector<int> solution(vector<string> infos, vector<string> query) {    
     vector<int> answer;
     
     vector<Applicant> applicants;
     for (string info : infos) 
         applicants.push_back(getApplicant(info));
+        
+    sort(applicants.begin(), applicants.end(), compareScore);
     
     for (string q : query) {
         Conditions cond = Conditions::none;
@@ -96,11 +102,9 @@ vector<int> solution(vector<string> infos, vector<string> query) {
                 int score = stoi(getStr.substr(getStr.find(' ')+1));
                 
                 int res = 0;
-                for (int i = 0; i < applicants.size(); i++) {
-                    auto test = applicants[i].condInt & cond;
-                    if (((applicants[i].condInt & cond) == applicants[i].condInt) && 
-                        (score <= applicants[i].score))
-                        res++;
+                auto iter = lower_bound(applicants.begin(), applicants.end(), Applicant{0, score}, compareScore);
+                for (iter; iter != applicants.end(); iter++) {
+                    if ((iter->condInt & cond) == iter->condInt) res++;
                 }
                 
                 answer.emplace_back(res);
