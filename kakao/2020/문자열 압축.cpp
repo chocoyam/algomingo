@@ -1,32 +1,43 @@
-#include <iostream>
+#include <string>
+#include <vector>
 
 using namespace std;
 
-int main()
-{
-    string s = "xababcdcdababcdcd";
-    int min = 0;
-    for (int strSize = 1; strSize <= s.size()/2; strSize++) {
-        int result = 0;
-        int compact = 0;
-        bool isSequence = false;
+void compRes(string& res, string str, int cnt) {
+    res += str;
+    if (cnt != 1) {
+        res += to_string(cnt);
+    }
+    return;
+}
+
+int solution(string s) {
+    string answerStr = s;
+    for (int i = 1; i <= s.size()/2; i++) {
+        int cur = 0;
+        vector<string> strs;
+        while (cur < s.size()) {
+            strs.push_back(s.substr(cur, i));
+            cur += i;
+        }
         
-        for (int i = 0; i < s.size()-strSize; i += strSize) {
-            string now = s.substr(i, strSize);
-            string next = s.substr(i + strSize, strSize);
-            if (now == next) {
-                compact++;
-                isSequence = true;
-                if (i + strSize >= s.size()-strSize) result++;  //last char
+        string curStr = "";
+        string res = "";
+        int cnt = 1;
+        for (string str : strs) {
+            if (curStr != str) {
+                compRes(res, curStr, cnt);
+                curStr = str;
+                cnt = 1;
             } else {
-                if (isSequence) result++;
-                isSequence = false;
+                cnt++;   
             }
         }
-        result += (s.size() - (compact*strSize));
-        if (min == 0 || min > result) min = result;
+        compRes(res, curStr, cnt);
+        if (res.size() < answerStr.size()) {
+            answerStr = res;
+        }
     }
 
-    cout << min;
-    return 0;
+    return answerStr.size();
 }
