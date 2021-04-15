@@ -5,7 +5,7 @@ using namespace std;
 vector<string> Orders = {"ABCDE", "AB", "CD", "ADE", "XYZ", "XYZ", "ACD"};
 vector<int> Course = {2, 3, 5};
 
-
+map<string, int> ordersByCourse[Course.size()];
 
 string sortString(string str)
 {
@@ -16,11 +16,20 @@ string sortString(string str)
 
 vector<string> splitStrByLen(string str, int len)
 {
-    vector<string> result;
-    if (str.size() < len) return result;
-    for (int i = 0 ; i <= str.size() - len; i++) 
-        result.push_back(str.substr(i, len));
-    return result;
+    vector<string> returnVec;
+    string sortedStr = sortString(str);
+    vector<char> charVec(str.begin(), str.end());
+    vector<bool> combVec(charVec.size(), true);
+    for (int i = 0; i < charVec.size() - len; i++) combVec[i] = false;
+    
+    //조합으로
+    do {
+        string menu = "";
+        for (int i = 0; i < charVec.size(); i++) 
+            if (combVec[i]) menu += charVec[i];
+        
+        returnVec.push_back(menu);
+    } while(next_permutation(combVec.begin(), combVec.end()));
 }
 
 bool comp(pair<string, int> lhs, pair<string, int> rhs)
@@ -31,38 +40,6 @@ bool comp(pair<string, int> lhs, pair<string, int> rhs)
 
 int main()
 {
-    map<string, int> ordersByCourse[Course.size()];
-    //Orders에 있는 각 문자열을 오름차순으로
-    for (string str : Orders) {
-        str.replace(0, str.size(), sortString(str));
-
-        for (int i = 0; i < Course.size(); i++) {
-            vector<string> temp = splitStrByLen(str, Course[i]);
-            
-            for (string tempStr : temp) {
-                if (ordersByCourse[i].find(tempStr) == ordersByCourse[i].end()) {
-                    ordersByCourse[i][tempStr] = 0;
-                } else {
-                    ordersByCourse[i][tempStr] += 1; 
-                }
-            }
-            
-            for (pair<string, int> data : ordersByCourse[i]) 
-                cout << data.first << " : " << data.second << endl;
-        }
-    }
-    
-    vector<string> answer;
-    for (auto courseMap : ordersByCourse) {
-        pair<string, int> data = *max_element(courseMap.begin(), courseMap.end(), comp);
-        
-        for (pair<string, int> element : courseMap) {
-            if (element.second == data.second)  answer.push_back(element.first);
-        }
-    }
-    
-    for (string res : answer) cout << res << endl;
-    
 
     return 0;
 }
