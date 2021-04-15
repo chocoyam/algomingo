@@ -18,3 +18,7 @@
     
   std::cout << "After loop: " << myints[0] << ' ' << myints[1] << ' ' << myints[2] << '\n';
 ```
+
+
+#### REFERENCE
+- https://ansohxxn.github.io/algorithm/combination/#stl-next_permutation%EC%9C%BC%EB%A1%9C-%EC%A1%B0%ED%95%A9-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0
