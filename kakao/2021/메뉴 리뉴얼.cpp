@@ -2,11 +2,6 @@
 
 using namespace std;
 
-vector<string> Orders = {"ABCDE", "AB", "CD", "ADE", "XYZ", "XYZ", "ACD"};
-vector<int> Course = {2, 3, 5};
-
-map<string, int> ordersByCourse[3];
-
 string sortString(string str)
 {
     vector<char> chVector(str.begin(), str.end());
@@ -14,17 +9,15 @@ string sortString(string str)
     return string(chVector.begin(), chVector.end());
 }
 
-void splitStrByLen(string str, int courseIdx)
+void splitStrByLen(string str, int courseIdx, map<string, int>* maps, int len)
 {
-    int len = Course[courseIdx];
-    
     if (str.size() < len) return;
     
     string sortedStr = sortString(str);
-    
     if (len == str.size()) {
-        if (ordersByCourse[courseIdx].find(str) == ordersByCourse[courseIdx].end()) ordersByCourse[courseIdx][str] = 1;
-        else ordersByCourse[courseIdx][str] += 1;
+        if (maps[courseIdx].find(sortedStr) == maps[courseIdx].end()) maps[courseIdx][sortedStr] = 1;
+        else maps[courseIdx][sortedStr] += 1;
+        
         return;
     }
 
@@ -38,22 +31,19 @@ void splitStrByLen(string str, int courseIdx)
         for (int i = 0; i < charVec.size(); i++) 
             if (combVec[i]) menu += charVec[i];
         
-        if (ordersByCourse[courseIdx].find(menu) == ordersByCourse[courseIdx].end()) ordersByCourse[courseIdx][menu] = 1;
-        else ordersByCourse[courseIdx][menu] += 1;
+        if (maps[courseIdx].find(menu) == maps[courseIdx].end()) maps[courseIdx][sortString(menu)] = 1;
+        else maps[courseIdx][sortString(menu)] += 1;
+
     } while(next_permutation(combVec.begin(), combVec.end()));
 }
 
-bool comp(pair<string, int> lhs, pair<string, int> rhs)
-{
-    if (lhs.second < rhs.second) return true;
-    else return false;
-}
-
-int main()
-{
-    for (string order : Orders) {
-        for (int i = 0; i < Course.size(); i++) {
-            splitStrByLen(order, i);
+vector<string> solution(vector<string> orders, vector<int> course) {
+    
+    map<string, int> ordersByCourse[course.size()];
+    
+    for (string order : orders) {
+        for (int i = 0; i < course.size(); i++) {
+            splitStrByLen(order, i, ordersByCourse, course[i]);
         }
     }
     
@@ -71,9 +61,7 @@ int main()
         answer.insert(answer.end(), tempAnswer.begin(), tempAnswer.end());
     }
     
-    sort(answer.begin(), answer.end());
-    
-    for (string str : answer) cout << str << endl;
-
-    return 0;
+    sort(answer.begin(), answer.end());    
+    return answer;
 }
+
